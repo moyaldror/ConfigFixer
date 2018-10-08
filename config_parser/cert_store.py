@@ -73,8 +73,8 @@ class CertificateStore(object):
             if not cert.is_cert_in_chain(cert=self.__nodes[neighbor]):
                 cert.add_child(self.__nodes[neighbor])
 
-            print('%s s:"%s", i:"%s"' % (' ' * indent, self.__nodes[neighbor].subj_name,
-                                         self.__nodes[neighbor].issuer_name))
+            # print('%s s:"%s", i:"%s"' % (' ' * indent, self.__nodes[neighbor].subj_name,
+            #                              self.__nodes[neighbor].issuer_name))
             self.__build_store(cert=self.__nodes[neighbor], indent=indent + 2)
 
     def generate_store(self):

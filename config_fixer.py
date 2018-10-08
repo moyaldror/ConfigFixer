@@ -76,12 +76,6 @@ def fix_config(config_file='config.txt', out_dir='./', out_file_name=''):
                               source_dir=os.path.abspath(os.path.join(out_dir, out_file_name)),
                               item_list=['certs', new_config_name])
 
-    # for root, dirs, files in os.walk(os.path.abspath(os.path.join(out_dir, out_file_name, 'certs'))):
-    #     for file in files:
-    #         os.remove(os.path.join(root, file))
-
-    # os.unlink(os.path.abspath(os.path.join(out_dir, out_file_name, new_config_name)))
-    # os.rmdir(os.path.abspath(os.path.join(out_dir, out_file_name, 'certs')))
     shutil.rmtree(os.path.abspath(os.path.join(out_dir, out_file_name)))
 
     return tgz_file

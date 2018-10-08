@@ -48,7 +48,6 @@ def read_config_file(cfg_file):
             cert.append(line.strip())
 
         if line.startswith(DxParserTagEnums.END_CERT_TAG):
-            print(cert)
             should_add = False
             pem_cert = x509.load_pem_x509_certificate(str.encode('\n'.join(cert)), default_backend())
 
