@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico"/>
+    `
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Ubuntu:400,700' rel='stylesheet' type='text/css'>
+
+    <title>Config Key Fixer</title>
+</head>
+<body style="font-family: Ubuntu; background-color: #FCFCFC;">
+<div class="container">
+    <h1 id="header" style="text-align: center; font-size: 4em; margin-top:100px;"><i class="fa fa-wrench"
+                                                                                     aria-hidden="true"></i> Config Key
+        Fixer <i class="fa fa-wrench" aria-hidden="true"></i></h1>
+    <div style="text-align: center; margin:20px;">
+        <form class="form-inline" id="uploadText" action="/text_config" method="post" target="_blank">
+            <div class="form-group">
+                <textarea class="form-control" rows="10" cols="120" id="config" name="textConfig"
+                          onclick='firstClick=false; $(this).val("")'>Paste config here</textarea>
+                <div style="margin-top: 20px;">
+                    <!--<label class="checkbox-inline"><input type="checkbox" id="returnType" value="true" name="tgz">Return config as tgz</label>-->
+                    <div style="display: inline-block; width: 20px;"></div>
+                    <input class="btn btn-primary btn-md" type="submit" value="Send Text Config" name="submitTextConf"
+                           disabled="disabled" id="sendConfig">
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <!--<div style="text-align: center; margin:20px;">-->
+    <!--<form class="form-inline" id="uploadForm" enctype="multipart/form-data" action="/file_config" method="post" target="_blank">-->
+    <!--<div class="form-group">-->
+    <!--<label class="control-label">Or Upload archived config:</label>-->
+    <!--<input class="form-control" type="file" name="file" id="configFile" accept=".tgz"/>-->
+    <!--<input class="btn btn-primary btn-md" type="submit" value="Upload Config" name="submit"  disabled="disabled" id="uploadConfig" style="transition: all .7s ease-in-out;">-->
+    <!--</div>-->
+    <!--</form>-->
+    <!--</div>-->
+
+    <div class="container" style="font-size: 0.7em">
+        Notes:
+        <ul class="bg-warning">
+            <li style="font-size: 1.3em;">Password for the keys is: <strong>radware</strong></li>
+            <!--<li style="font-size: 1.3em;">When uploading config use the .tgz file</li>-->
+            <!--<li style="font-size: 1.3em;"><strong>TechData files are also accepted and will be return as config tgz file</strong></li>-->
+        </ul>
+        <p class="bg-danger" style="text-align: center; font-weight: bold; font-size: 1.3em;">Proccessing might take
+            some time... Don't close the tab</p>
+    </div>
+
+    <div id="footer" style="margin-top:20px;">
+        <h5>Developed By: Dror Moyal 2018</h5>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //	var inputFile = document.getElementById('configFile');
+    var inputText = document.getElementById('config');
+
+    //	inputFile.onchange = function(e) {
+    //		if (inputFile.value !== null && inputFile.value !== ""){
+    //			document.getElementById('uploadConfig').removeAttribute("disabled");
+    //		}else{
+    //			document.getElementById('uploadConfig').setAttribute("disabled","disabled");
+    //		}
+    //	};
+
+    inputText.onkeyup = function (e) {
+        if (inputText.value !== null && inputText.value !== "") {
+            document.getElementById('sendConfig').removeAttribute("disabled");
+        } else {
+            document.getElementById('sendConfig').setAttribute("disabled", "disabled");
+        }
+    };
+
+    //	document.getElementById('uploadForm').onsubmit = function() {
+    //		var fileExt = inputFile.files[0].name.match(/(\.[^.]+)$/g)[0];
+    //		if (fileExt !== ".tgz"){
+    //			alert("Upload tgz files only");
+    //			return false;
+    //		}
+    //		return true;
+    //	}
+
+</script>
+
+</body>
+</html>
