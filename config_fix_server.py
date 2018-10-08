@@ -12,8 +12,12 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['DOWNLOADS'] = 'downloads'
 app.config['ROOT_DIR'] = os.getcwd()
 
-shutil.rmtree(os.path.abspath(app.config['UPLOAD_FOLDER']))
-shutil.rmtree(os.path.abspath(app.config['DOWNLOADS']))
+try:
+    shutil.rmtree(os.path.abspath(app.config['UPLOAD_FOLDER']))
+    shutil.rmtree(os.path.abspath(app.config['DOWNLOADS']))
+except:
+    pass
+
 os.mkdir(app.config['UPLOAD_FOLDER'])
 os.mkdir(app.config['DOWNLOADS'])
 
