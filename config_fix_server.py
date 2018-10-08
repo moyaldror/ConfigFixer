@@ -5,7 +5,7 @@ import uuid
 from flask import Flask, render_template, request, make_response
 from werkzeug import secure_filename
 
-from config_fixer import fix_config
+from fixer_helpers import get_config_parser
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
@@ -39,6 +39,16 @@ def generate_file_response(workdir, filename):
     os.unlink(res_file)
 
 
+def get_res(config_file, sessid):
+    get_config_parser(config_file=config_file)(config_file=config_file,
+                                               out_dir=app.config['DOWNLOADS'],
+                                               out_file_name=sessid)
+    resfile = '%s.tar.gz' % sessid
+    r = app.response_class(generate_file_response(workdir=app.config['DOWNLOADS'], filename=resfile))
+    r.headers.set('Content-Disposition', 'attachment', filename=resfile)
+    return r, resfile
+
+
 @app.route('/')
 def index():
     resp = make_response(render_template('./index.html'))
@@ -56,13 +66,7 @@ def get_text_config():
         cfg.write(request.form['textConfig'].replace('\r\n', '\n'))
 
     try:
-        fix_config(config_file=tmp_config_file,
-                   out_dir=app.config['DOWNLOADS'],
-                   out_file_name=sessid)
-        resfile = '%s.tar.gz' % sessid
-        r = app.response_class(generate_file_response(workdir=app.config['DOWNLOADS'], filename=resfile))
-        r.headers.set('Content-Disposition', 'attachment', filename=resfile)
-        res = r
+        res, resfile = get_res(config_file=tmp_config_file, sessid=sessid)
     except Exception as e:
         print(e)
         res = make_response(render_template('./parserErr.html'))
