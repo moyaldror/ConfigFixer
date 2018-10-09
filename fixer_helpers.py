@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 import tarfile
 
 from config_fixer import fix_config
@@ -16,6 +17,11 @@ def parse_archive_config(config_file, out_dir, out_file_name):
 
 
 def parse_techdata_config(config_file, out_dir, out_file_name):
+    def write_cfg_to_file(cfg_file_name, file):
+        with open(cfg_file_name, 'w') as w:
+            for cfg in config_regex.findall(b''.join(file.readlines()).decode('utf-8')):
+                w.writelines(cfg)
+
     tar = tarfile.open(config_file, 'r:gz')
     files = []
 
@@ -23,13 +29,19 @@ def parse_techdata_config(config_file, out_dir, out_file_name):
         if name.find('tsdmp') >= 0:
             files.append((tar.extractfile(tar.getmember(name)), name.split('/')[-1]))
 
-    for file, name in files:
-        out_directory = out_dir if name.find('vadc') < 0 else os.path.join(out_dir, 'vadc-%s' % (re.findall(r'\d+')[0]))
-        print(out_directory)
-        # with open(name, 'w') as w:
-        #     for cfg in config_regex.findall(b''.join(file.readlines()).decode('utf-8')):
-        #         w.writelines(cfg)
-        # fix_config(config_file=name, out_dir=out_dir, out_file_name=out_file_name)
+    if len(files) > 1:
+        for file, name in files:
+            out_directory = os.path.join(out_dir, 'vx') if name.find('vadc') < 0 else os.path.join(out_dir, 'vadc%s' % (
+            re.findall(r'\d+', name)[0]))
+            # print(out_directory)
+
+            os.mkdir(out_directory)
+            write_cfg_to_file(cfg_file_name=os.path.join(out_directory, name), file=file)
+            fix_config(config_file=name, out_dir=out_directory, out_file_name=out_file_name)
+            shutil.rmtree(out_directory)
+    else:
+        write_cfg_to_file(cfg_file_name=os.path.join(out_dir, files[0][1]), file=files[0][0])
+        fix_config(config_file=config_file, out_dir=out_dir, out_file_name=out_file_name)
 
 
 def get_config_parser(config_file):
@@ -55,11 +67,14 @@ if __name__ == '__main__':
             files.append((tar.extractfile(tar.getmember(name)), name.split('/')[-1]))
 
     for file, name in files:
-        out_directory = './' if name.find('vadc') < 0 else os.path.join('./', 'vadc%s' % (re.findall(r'\d+', name)[0]))
+        out_directory = './vx' if name.find('vadc') < 0 else os.path.join('./',
+                                                                          'vadc%s' % (re.findall(r'\d+', name)[0]))
         print(out_directory)
-        # with open(name, 'w') as w:
-        #     for cfg in config_regex.findall(b''.join(file.readlines()).decode('utf-8')):
-        #         w.writelines(cfg)
+        os.mkdir(out_directory)
+        with open(os.path.join(out_directory, name), 'w') as w:
+            for cfg in config_regex.findall(b''.join(file.readlines()).decode('utf-8')):
+                w.writelines(cfg)
         # fix_config(config_file=name, out_dir=out_dir, out_file_name=out_file_name)
+        shutil.rmtree(out_directory)
 
     tar.close()

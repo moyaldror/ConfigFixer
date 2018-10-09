@@ -49,9 +49,9 @@
         <ul class="bg-warning">
             <li style="font-size: 1.3em;">Password for the keys is: <strong>radware</strong></li>
             <!--<li style="font-size: 1.3em;">When uploading config use the .tgz file</li>-->
-            <!--<li style="font-size: 1.3em;"><strong>TechData files are also accepted and will be return as config tgz file</strong></li>-->
+            <!--<li style="font-size: 1.3em;"><strong>TechData files are also accepted and will be returned as config tgz file</strong></li>-->
         </ul>
-        <p class="bg-danger" style="text-align: center; font-weight: bold; font-size: 1.3em;">Proccessing might take
+        <p class="bg-danger" style="text-align: center; font-weight: bold; font-size: 1.3em;">Processing might take
             some time... Don't close the tab</p>
     </div>
 
@@ -61,16 +61,16 @@
 </div>
 
 <script type="text/javascript">
-    //	var inputFile = document.getElementById('configFile');
+    //    	var inputFile = document.getElementById('configFile');
     var inputText = document.getElementById('config');
 
-    //	inputFile.onchange = function(e) {
-    //		if (inputFile.value !== null && inputFile.value !== ""){
-    //			document.getElementById('uploadConfig').removeAttribute("disabled");
-    //		}else{
-    //			document.getElementById('uploadConfig').setAttribute("disabled","disabled");
-    //		}
-    //	};
+    //    	inputFile.onchange = function(e) {
+    //    		if (inputFile.value !== null && inputFile.value !== ""){
+    //    			document.getElementById('uploadConfig').removeAttribute("disabled");
+    //    		}else{
+    //    			document.getElementById('uploadConfig').setAttribute("disabled","disabled");
+    //    		}
+    //    	};
 
     inputText.onkeyup = function (e) {
         if (inputText.value !== null && inputText.value !== "") {
@@ -80,14 +80,14 @@
         }
     };
 
-    //	document.getElementById('uploadForm').onsubmit = function() {
-    //		var fileExt = inputFile.files[0].name.match(/(\.[^.]+)$/g)[0];
-    //		if (fileExt !== ".tgz"){
-    //			alert("Upload tgz files only");
-    //			return false;
-    //		}
-    //		return true;
-    //	}
+    //    	document.getElementById('uploadForm').onsubmit = function() {
+    //    		var fileExt = inputFile.files[0].name.match(/(\.[^.]+)$/g)[0];
+    //    		if (fileExt !== ".tgz"){
+    //    			alert("Upload tgz files only");
+    //    			return false;
+    //    		}
+    //    		return true;
+    //    	}
 
 </script>
 

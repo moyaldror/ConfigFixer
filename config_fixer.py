@@ -28,6 +28,7 @@ def write_new_config_file(new_cfg_file, cert_dir, orig_cfg_content, cert_store):
     with open(new_cfg_file, 'w') as new_conf:
         should_print = True
         should_add = False
+
         config_cert_name = None
         cert = []
 

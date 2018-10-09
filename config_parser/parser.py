@@ -13,8 +13,8 @@ from config_parser.cert_store import CertificateStore
 class DxParserTagEnums:
     START_CERT_TAG = '-----BEGIN CERTIFICATE-----'
     END_CERT_TAG = '-----END CERTIFICATE-----'
-    START_KEY_TAG = '-----BEGIN.*PRIVATE KEY-----'
-    END_KEY_TAG = '-----END.*PRIVATE KEY-----'
+    START_KEY_TAG = r'-----BEGIN.*PRIVATE KEY-----'
+    END_KEY_TAG = r'-----END.*PRIVATE KEY-----'
     START_CERT_IMPORT = 'import cert'
     START_INTERCERT_IMPORT = 'import intermca'
     START_TRUSTCERT_IMPORT = 'import trustca'
@@ -34,8 +34,20 @@ def read_config_file(cfg_file):
     with open(cfg_file, 'r') as cfg:
         lines = cfg.readlines()
 
+    tmp_cfg = '\r'.join(lines)
+    new_cfg = '\r'.join(lines)
+    if not re.match(DxParserTagEnums.START_KEY_IMPORT, tmp_cfg):
+        while tmp_cfg.find('/certs/key') >= 0:
+            dec_line = re.findall(r'.*/certs/key.*\n', tmp_cfg)[0]
+            import_line = '/c/slb/ssl/certs/import key "%s" text\n' % (dec_line.split(' ')[1].strip())
+            empty_key = '-----BEGIN RSA PRIVATE KEY-----\n\r-----END RSA PRIVATE KEY-----\n\r\n'
+            tmp_cfg = re.sub(r'.*/certs/key.*\n\r(\tname.*\n)?', '', tmp_cfg, 0, re.MULTILINE)
+            new_cfg = re.sub(r'.*/certs/key.*\n\r(\tname.*\n)?', 'XXXDRORXXX', new_cfg, 0, re.MULTILINE)
+            new_cfg = re.sub(r'XXXDRORXXX', '\r'.join([import_line, empty_key]), new_cfg, 0, re.MULTILINE)
+
     should_add = False
     config_cert_name = None
+    lines = new_cfg.split('\r')
     for line in lines:
         if not config_cert_name and line.startswith(DxParserTagEnums.START_CERTS_IMPORT):
             config_cert_name = import_regex.split(line)[1].split(' ')[1].strip('"')

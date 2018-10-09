@@ -84,15 +84,32 @@ def get_text_config():
 
 @app.route('/file_config', methods=['POST'])
 def upload_file():
+    sessid = request.cookies.get('sessid')
     f = request.files['file']
     filename = secure_filename(f.filename)
-    work_dir = create_workdir(uid=request.cookies.get('sessid'))
+    work_dir = create_workdir(uid=sessid)
     file_location = os.path.join(work_dir, filename)
     f.save(file_location)
 
-    r = app.response_class(generate_file_response(workdir=work_dir, filename=filename))
-    r.headers.set('Content-Disposition', 'attachment', filename=filename)
-    return r
+    try:
+        res, resfile = get_res(config_file=file_location, sessid=sessid)
+    # except Exception as e:
+    #     print(e)
+    #     res = make_response(render_template('./parserErr.html'))
+    finally:
+        os.chdir(os.path.abspath(app.config['ROOT_DIR']))
+        shutil.rmtree(os.path.abspath(work_dir))
+        try:
+            shutil.rmtree(os.path.abspath(os.path.join(app.config['DOWNLOADS']), sessid))
+            os.unlink(os.path.abspath(os.path.join(app.config['DOWNLOADS']), resfile))
+        except:
+            pass
+
+    return res
+
+    # r = app.response_class(generate_file_response(workdir=work_dir, filename=filename))
+    # r.headers.set('Content-Disposition', 'attachment', filename=filename)
+    # return r
 
 
 if __name__ == '__main__':
