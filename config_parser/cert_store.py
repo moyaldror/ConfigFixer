@@ -1,5 +1,6 @@
 import hashlib
 import os
+import re
 
 from certificate_copycat import copycat_generator
 from config_parser.cert import Cert
@@ -55,7 +56,7 @@ class CertificateStore(object):
         if not os.path.isdir(output_dir):
             os.mkdir(output_dir)
 
-        with open('%s%s%s.pem' % (output_dir, os.path.sep, cert.subj_name.replace(' ', '_')), 'w') as cert_file:
+        with open('%s%s%s.pem' % (output_dir, os.path.sep, re.sub(r'(?:\s|\*|\.)', '_',  cert.subj_name)), 'w') as cert_file:
             cert_file.writelines(Cert.get_key_pem(key=pem_new_cert.key))
             cert_file.writelines(Cert.get_cert_pem(cert=pem_new_cert.certificate))
 

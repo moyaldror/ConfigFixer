@@ -52,7 +52,9 @@ class CertificateCopyCatGenerator(object):
 
         for extension in self._get_extensions():
             if not isinstance(extension.value, x509.AuthorityKeyIdentifier) and \
-                    not isinstance(extension.value, x509.SubjectKeyIdentifier):
+                    not isinstance(extension.value, x509.SubjectKeyIdentifier) and \
+                    not isinstance(extension.value, x509.PrecertificateSignedCertificateTimestamps):
+
                 self._builder = self._builder.add_extension(extension.value, extension.critical)
 
         priv_key = self._get_private_key()
