@@ -4,6 +4,7 @@ import uuid
 
 from flask import Flask, render_template, request, make_response
 from werkzeug import secure_filename
+from werkzeug.debug import get_current_traceback
 
 from fixer_helpers import get_config_parser
 
@@ -49,6 +50,12 @@ def get_res(config_file, sessid):
     return r, resfile
 
 
+@app.errorhandler(Exception)
+def exception_handler(error):
+    return get_current_traceback(skip=1, show_hidden_frames=True,
+                                 ignore_system_exceptions=False).render_full(evalex=True)
+
+
 @app.route('/')
 def index():
     resp = make_response(render_template('./index.html'))
@@ -69,7 +76,8 @@ def get_text_config():
         res, resfile = get_res(config_file=tmp_config_file, sessid=sessid)
     except Exception as e:
         print(e)
-        res = make_response(render_template('./parserErr.html'))
+        raise e
+        #res = make_response(render_template('./parserErr.html'))
     finally:
         os.chdir(os.path.abspath(app.config['ROOT_DIR']))
         shutil.rmtree(os.path.abspath(upload_dir))
@@ -93,9 +101,10 @@ def upload_file():
 
     try:
         res, resfile = get_res(config_file=file_location, sessid=sessid)
-    # except Exception as e:
-    #     print(e)
-    #     res = make_response(render_template('./parserErr.html'))
+    except Exception as e:
+        print(e)
+        raise e
+        # res = make_response(render_template('./parserErr.html'))
     finally:
         os.chdir(os.path.abspath(app.config['ROOT_DIR']))
         shutil.rmtree(os.path.abspath(work_dir))
